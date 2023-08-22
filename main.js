@@ -526,7 +526,7 @@ async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
 
       
       client.on('reconnect', function () {
-          console.log('Reconnecting to Ecoflow MQTT broker...',mqttDaten.URL, mqttDaten.port, mqttDaten.protocol); //
+          console.log('Reconnecting to Ecoflow MQTT broker...',mqttDaten.URL, mqttDaten.Port, mqttDaten.protocol); //
           // don't need to reconnect
           client.end();
       });
