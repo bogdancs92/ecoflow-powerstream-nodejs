@@ -427,6 +427,7 @@ async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
           hostname: 'api.ecoflow.com',
           path: '/auth/login',
           method: 'POST',
+          rejectUnauthorized: false,
           headers: {
               'Host': 'api.ecoflow.com',
               'lang': 'de-de',
