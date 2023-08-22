@@ -6,12 +6,11 @@ var dotenv = require ('dotenv');
 dotenv.config();
 
 const port = 8000;
-
+const key = "/?"+process.env.KEY_QUERY+"="
 const app = express();
 app.get('/', (req, res) => {
-  console.log(req.url);
-  if (req.url.includes("/?changePowserStream=")===true) {
-    let v = req.url.replace("/?changePowserStream=","");
+  if (process.env.KEY_QUERY && req.url.includes(key)===true) {
+    let v = req.url.replace(key,"");
     console.log(v);
     if (v*1==v && process.env.KEY_PASSWORD && process.env.KEY_MAIL && process.env.KEY_POWERSTREAM_SN) {
       changeWatt(v*1, process.env.KEY_PASSWORD, process.env.KEY_MAIL, process.env.KEY_POWERSTREAM_SN);
