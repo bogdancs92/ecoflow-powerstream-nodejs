@@ -15,8 +15,11 @@ app.get('/', (req, res) => {
     console.log(v);
     if (v*1==v && process.env.KEY_PASSWORD && process.env.KEY_MAIL && process.env.KEY_POWERSTREAM_SN) {
       changeWatt(v*1, process.env.KEY_PASSWORD, process.env.KEY_MAIL, process.env.KEY_POWERSTREAM_SN);
+      res.send('Changed to ' + v);
     }
-    res.send('Changed to' + v);
+    else {
+      res.send('Hello World!')
+    }
   }
   else {
     res.send('Hello World!')
