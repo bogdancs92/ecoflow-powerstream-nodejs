@@ -546,10 +546,10 @@ function SendProto(client, protomsg, topic) {
   const PowerMessage = root.lookupType("setMessage");
   const message = PowerMessage.create(JSON.parse(protomsg));
   const messageBuffer = PowerMessage.encode(message).finish();
-  console.log("protomsg",protomsg);
-  console.log("message",message);
+  //console.log("protomsg",protomsg);
+  //console.log("message",message);
 
-  console.log("messageBuffer",messageBuffer.toString());
+  //console.log("messageBuffer",messageBuffer.toString());
   //log("Modifizierter Hex-String:" +  Buffer.from(messageBuffer).toString("hex"));
   //log("topic:" +  topic);
   client.publish(topic, messageBuffer, { qos: 1 }, function (error) {
