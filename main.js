@@ -1,7 +1,7 @@
 
-import * as https from 'https'; //ES 6
-import * as  mqtt from "mqtt";
-import  protobuf from "protobufjs";
+var https = require('https');
+var mqtt=require("mqtt");
+var protobuf=require("protobufjs");
 
 function httpsRequest(options, data) {
   return new Promise((resolve, reject) => {
@@ -420,7 +420,7 @@ const musterSetAC = {
 
 // @ts-ignore
 
-export default async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
+async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
 
   async function getEcoFlowMqttData(email, password) {
       const options = {
@@ -584,3 +584,5 @@ function getVarintByteSize(number) {
   byteSize++; byteSize++;
   return byteSize;
 }
+
+module.exports = changeWatt;

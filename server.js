@@ -1,6 +1,8 @@
-import changeWatt from "./main.js";
-import express from "express";
-import dotenv from "dotenv";
+
+var path = require('path');
+var changeWatt = require(path.resolve( __dirname, "./main.js" ) );
+var express = require ('express');
+var dotenv = require ('dotenv');
 dotenv.config();
 
 const port = 8000;
