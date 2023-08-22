@@ -499,7 +499,8 @@ async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
           clientId: mqttDaten.clientID,
           username: mqttDaten.User,
           password: mqttDaten.Passwort,
-          protocol: mqttDaten.protocol
+          protocol: mqttDaten.protocol,
+          rejectUnauthorized: false,
       };
       const client = await mqtt.connect("mqtt://" + mqttDaten.URL, options);
       // Event-Handler für Verbindungsaufbau
