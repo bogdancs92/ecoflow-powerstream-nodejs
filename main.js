@@ -420,7 +420,7 @@ const musterSetAC = {
 
 // @ts-ignore
 
-export async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
+export default async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
 
   async function getEcoFlowMqttData(email, password) {
       const options = {
