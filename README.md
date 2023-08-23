@@ -13,10 +13,10 @@ PowerStream
 
 Call exemple (simply compose your correct URL and call it)
 - SetPrio AC and watts to 100 :
-https://YOUR_URL/cmd?TOKEN_KEY=TOKEN_VALUE&KEY1=100&KEY2=0
+https://YOUR_URL/KEY_URL?TOKEN_KEY=TOKEN_VALUE&KEY1=100&KEY2=0
 
 - SetPrio storage and watts to 500 :
-https://YOUR_URL/cmd?TOKEN_KEY=TOKEN_VALUE&KEY1=500&KEY2=1
+https://YOUR_URL/KEY_URL?TOKEN_KEY=TOKEN_VALUE&KEY1=500&KEY2=1
 
 Home atomation usage:
 - In configuration.xml:
@@ -28,7 +28,7 @@ Home atomation usage:
     
   rest_command:
     pws_cmd:
-      url: "https://YOUR_URL/cmd?TOKEN_KEY=TOKEN_VALUE&KE1={{ states('input_text.pws_out_value') }}&KEY2={{ states('input_text.pws_mode_value') }}"
+      url: "https://YOUR_URL/KEY_URL?TOKEN_KEY=TOKEN_VALUE&KE1={{ states('input_text.pws_out_value') }}&KEY2={{ states('input_text.pws_mode_value') }}"
       verify_ssl: false
 
 

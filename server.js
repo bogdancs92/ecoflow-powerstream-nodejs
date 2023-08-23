@@ -6,10 +6,10 @@ dotenv.config();
 const port = 8000;
 const key = "/?"+process.env.KEY_QUERY+"="
 const app = express();
-
+const url = process.env.KEY_URL;
 let mqttDaten = {};
 
-app.get('/cmd', (req, res) => {
+app.get('/'+url, (req, res) => {
   if (process.env.TOKEN && req.query[process.env.TOKEN] && (req.query[process.env.TOKEN] = process.env.TOKEN_VAL)) {
     let v = req.query[process.env.KEY_QUERY_AC];
     let v2 = req.query[process.env.KEY_QUERY_PRIO];
