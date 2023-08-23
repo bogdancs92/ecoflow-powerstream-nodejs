@@ -1,36 +1,3 @@
-
-var https = require('https');
-var mqtt=require("mqtt");
-var protobuf=require("protobufjs");
-
-function httpsRequest(options, data) {
-  return new Promise((resolve, reject) => {
-      const req = https.request(options, res => {
-          let data = '';
-          res.on('data', chunk => {
-              data += chunk;
-          });
-          res.on('end', () => {
-              resolve(data);
-          });
-      });
-
-      req.on('error', error => {
-          console.log("error https ",error);
-          reject(error);
-      });
-
-      if (data) {
-          req.write(JSON.stringify(data));
-      }
-
-      req.end();
-  });
-}
-
-function log(msg) {
-  console.log(msg);
-}
 const protoSource2 = `
 syntax = "proto3";
 message Message {
@@ -395,198 +362,66 @@ enum CmdFunction {
     SupplyPriorityPack = 130;
 }
 `;
-const mqttDaten = {};
+
 const musterSetAC = {
-    header: {
-        pdata: {
-            value: 1300,
-        },
-        src: 32,
-        dest: 53,
-        dSrc: 1,
-        dDest: 1,
-        checkType: 3,
-        cmdFunc: 20,
-        cmdId: 129,
-        dataLen: 3,
-        needAck: 1,
-        seq: 1651831507,
-        version: 19,
-        payloadVer: 1,
-        from: 'ios',
-        deviceSn: 'ABCxxxxxxx123'
-    }
+  header: {
+      pdata: {
+          value: 1300,
+      },
+      src: 32,
+      dest: 53,
+      dSrc: 1,
+      dDest: 1,
+      checkType: 3,
+      cmdFunc: 20,
+      cmdId: 129,
+      dataLen: 3,
+      needAck: 1,
+      seq: 1651831507,
+      version: 19,
+      payloadVer: 1,
+      from: 'ios',
+      deviceSn: 'ABCxxxxxxx123'
+  }
 };
 
-// @ts-ignore
+const writeables = [
+  { id: 38, name: 'Beep', ValueName: 'enabled', Typ: 'DM' },
+  { id: 69, name: 'slowChgPower', ValueName: 'slowChgPower', Typ: 'DM' },
+  { id: 66, name: 'ACPower', ValueName: 'enabled', Typ: 'DM' },
+  { id: 81, name: 'DCPower', ValueName: 'enabled', Typ: 'DM' },
+  { id: 34, name: 'USBPower', ValueName: 'enabled', Typ: 'DM' },
+  { id: 51, name: 'minDsgSoc', ValueName: 'minDsgSoc', Typ: 'DM' },
+  { id: 49, name: 'maxChgSoc', ValueName: 'maxChgSoc', Typ: 'DM' },
+  { id: 71, name: 'curr12VMax', ValueName: 'currMa', Typ: 'DM' },
+  { id: 33, name: 'standByModeMins', ValueName: 'standByMode', Typ: 'DM' },
+  { id: 49, name: 'lcdTimeMins', ValueName: 'lcdTime', Typ: 'DM' },
+  { id: 153, name: 'ACstandByMins', ValueName: 'standByMins', Typ: 'DM' },
+  { id: 52, name: 'openOilSoc', ValueName: 'openOilSoc', Typ: 'DM' },
+  { id: 53, name: 'closeOilSoc', ValueName: 'closeOilSoc', Typ: 'DM' },
+  { id: 0, name: 'acChgCfg_D2', ValueName: 'chgWatts', Typ: 'D2', MT: 5, AddParam: '{"chgWatts":600,"chgPauseFlag":255}' },
+  { id: 0, name: 'dcOutCfg_D2', ValueName: 'enabled', Typ: 'D2', MT: 1 },
+  { id: 0, name: 'quietMode_D2', ValueName: 'enabled', Typ: 'D2', MT: 5 },
+  { id: 0, name: 'dcChgCfg_D2', ValueName: 'dcChgCfg', Typ: 'D2', MT: 5 },
+  { id: 1, name: 'InverterHeartbeat', Typ: 'PS', Templet: 'InverterHeartbeat', Writable: false, cmdFunc: 20 },
+  { id: 1, name: 'plug_heartbeat_pack', Typ: 'PLUG', Templet: 'plug_heartbeat_pack', Writable: false, cmdFunc: 2 },
+  { id: 4, name: 'InverterHeartbeat2', Typ: 'PS', Templet: 'InverterHeartbeat2', Writable: false, cmdFunc: 20 },
+  { id: 11, name: 'Ping', Typ: 'PS', Templet: 'setValue', Writable: false, cmdFunc: 32 },
+  { id: 32, name: 'Ignor', Typ: 'PS', Templet: '', Writable: false, Ignor: true, cmdFunc: 254 },
+  { id: 134, name: 'Ignor', Typ: 'PS', Templet: '', Writable: false, Ignor: true, cmdFunc: 20 },
+  { id: 135, name: 'SetDisplayBrightness', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', Ignor: false, cmdFunc: 20 },
+  { id: 135, name: 'Ignor', Typ: 'Plug', Templet: '', Writable: false, ValueName: '', Ignor: true, cmdFunc: 2 },
+  { id: 136, name: 'PowerPack', Typ: 'PS', Templet: 'PowerPack', Writable: false, cmdFunc: 20 },
+  { id: 138, name: 'PowerPack', Typ: 'PS', Templet: 'PowerPack', Writable: false, cmdFunc: 20 },
+  { id: 130, name: 'SetPrio', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 132, name: 'SetBatLimitLow', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 133, name: 'SetBatLimitHigh', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 129, name: 'SetAC', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 129, name: 'SwitchPlug', Typ: 'Plug', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 2 },
+];
 
-async function changeWatt(_targetWatt, _pwd,_mail, _sn) {
-
-  async function getEcoFlowMqttData(email, password) {
-      const options = {
-          hostname: 'api.ecoflow.com',
-          path: '/auth/login',
-          method: 'POST',
-          rejectUnauthorized: false,
-          headers: {
-              'Host': 'api.ecoflow.com',
-              'lang': 'de-de',
-              'platform': 'android',
-              'sysversion': '11',
-              'version': '4.1.2.02',
-              'phonemodel': 'SM-X200',
-              'content-type': 'application/json',
-              'user-agent': 'okhttp/3.14.9'
-          }
-      };
-
-      const data = {
-          appVersion: "4.1.2.02",
-          email: email,
-          os: "android",
-          osVersion: "30",
-          password: Buffer.from(password).toString('base64'),
-          scene: "IOT_APP",
-          userType: "ECOFLOW"
-      };
-
-      function uuidv4() {
-          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-              var r = Math.random() * 16 | 0,
-                  v = c === 'x' ? r : (r & 0x3 | 0x8);
-              return v.toString(16);
-          });
-      }
-
-      let token, userid;
-      try {
-          let response =  await httpsRequest(options, data);
-          let responseData = JSON.parse(response);
-          token = responseData.data.token;
-          userid = responseData.data.user.userId;
-      } catch (error) {
-          //throw new Error("Une erreur s'est produite:",error);
-          console.log("ERROR",response);
-      }
-
-      if (!token) return "ERROR";
-      options.path = `/iot-auth/app/certification?userId=${userid}`;
-      options.method = 'GET';
-      options.headers.authorization = `Bearer ${token}`;
-      try {
-          let response = await httpsRequest(options);
-          response = JSON.parse(response);
-          mqttDaten.Passwort = response.data.certificatePassword;
-          mqttDaten.Port = response.data.port;
-          mqttDaten.UserID = userid;
-          mqttDaten.User = response.data.certificateAccount;
-          mqttDaten.URL = response.data.url
-          mqttDaten.protocol = response.data.protocol;
-          mqttDaten.clientID = "ANDROID_" + uuidv4() + "_" + userid
-      } catch (error) {
-          log(response, mqttDaten);
-          throw new Error("Une erreur s'est produite lors de la détermination des données d'accès. Veuillez vérifier les données d'accès.");
-      }
-  }
-
-  //################ MQTT Verbindung ##################
-  async function setupMQTTConnection(sn, valueWATT) {
-      //console.log("mqttDaten",mqttDaten);
-      //log("Nouvelle connexion MQTT",mqttDaten)
-      // Verbindung herstellen
-      const options = {
-          port: mqttDaten.Port,
-          clientId: mqttDaten.clientID,
-          username: mqttDaten.User,
-          password: mqttDaten.Passwort,
-          protocol: mqttDaten.protocol,
-          rejectUnauthorized: false,
-      };
-      const client = await mqtt.connect("mqtt://" + mqttDaten.URL, options);
-      // Event-Handler für Verbindungsaufbau
-      client.on('connect', function () {
-          console.log('Connecté au courtier Ecoflow MQTT');
-          setAC(client, sn,valueWATT);
-          setTimeout(() => {
-            client.end();
-          }, "3000");
-          //isMqttConnected = true
-      });
-
-      // Event-Handler für getrennte Verbindung
-      client.on('close', () => {
-          console.log("Le client MQTT est déconnecté");
-          //isMqttConnected = false;
-      });
-
-      // Callback für Fehler
-      client.on('error', function (error) {
-          log('Fehler bei der Ecoflow MQTT-Verbindung:' + error, 'warn'); //
-      });
-
-      
-      client.on('reconnect', function () {
-          console.log('Reconnecting to Ecoflow MQTT broker...',mqttDaten.URL, mqttDaten.Port, mqttDaten.protocol); //
-          // don't need to reconnect
-          client.end();
-      });
-      
-      // Weitere Event-Handler hier...
-      return client;
-  }
-
-  await getEcoFlowMqttData(_mail, _pwd);
-  await setupMQTTConnection(_sn,_targetWatt*10);
+module.exports = {
+  protoSource2,
+  musterSetAC,
+  writeables
 }
-//changeWatt(500);
-
-function SendProto(client, protomsg, topic) {
-  //return
-  const root = protobuf.parse(protoSource2).root;
-  const PowerMessage = root.lookupType("setMessage");
-  const message = PowerMessage.create(JSON.parse(protomsg));
-  const messageBuffer = PowerMessage.encode(message).finish();
-  //console.log("protomsg",protomsg);
-  //console.log("message",message);
-
-  //console.log("messageBuffer",messageBuffer.toString());
-  //log("Modifizierter Hex-String:" +  Buffer.from(messageBuffer).toString("hex"));
-  //log("topic:" +  topic);
-  client.publish(topic, messageBuffer, { qos: 1 }, function (error) {
-      if (error) {
-          console.error('Fehler beim Veröffentlichen der MQTT-Nachricht:', error);
-      } else {
-          log('Le message MQTT a été publié avec succès.'); 
-      }
-  });
-}
-
-function setAC(client,asn, Value) {
-  log("set Ac => " + Value + " Watts");
-  let updatedMusterSetAC = musterSetAC;
-  if (Value <= -1) {
-      delete updatedMusterSetAC.item.meta;
-      delete updatedMusterSetAC.item.ValByte;
-  }
-  else {
-      updatedMusterSetAC.header.pdata.value = Value
-      updatedMusterSetAC.header.dataLen = getVarintByteSize(Value)
-  }
-  updatedMusterSetAC.header.seq = Date.now()
-  updatedMusterSetAC.header.deviceSn = asn
-  //log(JSON.stringify(updatedMusterSetAC))
-  //setState(ConfigData.statesPrefix + '.app_' + mqttDaten.UserID + '_' + asn + '_thing_property_set.setAC', Value.toString(), true)
-  SendProto(client,JSON.stringify(updatedMusterSetAC), '/app/' + mqttDaten.UserID + '/' + asn + '/thing/property/set');
-}
-
-function getVarintByteSize(number) {
-  let byteSize = 0;
-  while (number >= 128) {
-      byteSize++;
-      number >>= 7; // Rechtsschiebeoperation um 7 Bits
-  }
-  byteSize++; byteSize++;
-  return byteSize;
-}
-
-module.exports = changeWatt;
