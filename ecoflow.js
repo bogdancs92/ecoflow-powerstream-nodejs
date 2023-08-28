@@ -139,7 +139,7 @@ async function setupMQTTConnection(mqttDaten) {
 }
 
 function setAC(client,asn, Value) {
-  log("set Ac => " + Value + " Watts<br>");
+  log("set Ac => " + Value/10 + " Watts<br>");
   let updatedMusterSetAC = musterSetAC;
   if (Value <= -1) {
       delete updatedMusterSetAC.item.meta;
