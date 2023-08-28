@@ -9,6 +9,19 @@ const app = express();
 const url = process.env.KEY_URL;
 let mqttDaten = {};
 
+console.log = (function() {
+  var console_log = console.log;
+  return function() {
+    var delta = new Date().toLocaleString('fr-FR');
+    var args = [];
+    args.push(delta + ': ');
+    for(var i = 0; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+    console_log.apply(console, args);
+  };
+})();
+
 app.get('/'+url, (req, res) => {
   if (process.env.TOKEN && req.query[process.env.TOKEN] && (req.query[process.env.TOKEN] = process.env.TOKEN_VAL)) {
     let v = req.query[process.env.KEY_QUERY_AC];
@@ -61,5 +74,5 @@ app.get('/'+url, (req, res) => {
 app.use((req, res) => {res.status(404).send('Hello World!')});
 
 app.listen(port, () =>
-  console.log('Starting app. <br>'),
+  console.log('Starting app.'),
 );

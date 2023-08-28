@@ -139,7 +139,7 @@ async function setupMQTTConnection(mqttDaten) {
 }
 
 function setAC(client,asn, Value) {
-  log("set Ac => " + Value/10 + " Watts<br>");
+  log("set Ac => " + Value/10 + " Watts");
   let updatedMusterSetAC = musterSetAC;
   if (Value <= -1) {
       delete updatedMusterSetAC.item.meta;
@@ -161,7 +161,7 @@ function setAC(client,asn, Value) {
 function setPrio(_client, _asn, _value) {
     const lastPart =  "SetPrio";
     const matchedEntry = writeables.find((entry) => entry.name === lastPart); 
-    log("setPrio => "+_value+'<br>');
+    log("setPrio => "+_value);
     if (matchedEntry) {
        if (matchedEntry.Typ == "PS") {
             updatedMuster = JSON.parse(JSON.stringify(musterSetAC));
