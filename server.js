@@ -13,7 +13,7 @@ app.get('/'+url, (req, res) => {
   if (process.env.TOKEN && req.query[process.env.TOKEN] && (req.query[process.env.TOKEN] = process.env.TOKEN_VAL)) {
     let v = req.query[process.env.KEY_QUERY_AC];
     let v2 = req.query[process.env.KEY_QUERY_PRIO];
-    console.log(v,v2);
+    //console.log(v,v2);
     if (process.env.KEY_PASSWORD && process.env.KEY_MAIL && process.env.KEY_POWERSTREAM_SN && ( v || v2)) {
       //changeWatt(v*1, process.env.KEY_PASSWORD, process.env.KEY_MAIL, process.env.KEY_POWERSTREAM_SN);
       if (req.query[process.env.KEY_QUERY_AC] || req.query[process.env.KEY_QUERY_PRIO]) {
@@ -24,7 +24,7 @@ app.get('/'+url, (req, res) => {
             setupMQTTConnection(mqttDaten)
               .then (client => {
                 client.on('connect', function () {
-                  console.log('Connecté au courtier Ecoflow MQTT');
+                  //console.log('Connecté au courtier Ecoflow MQTT');
                   if (v) {
                     setAC(client, process.env.KEY_POWERSTREAM_SN,v*10);
                   }
@@ -61,5 +61,5 @@ app.get('/'+url, (req, res) => {
 app.use((req, res) => {res.status(404).send('Hello World!')});
 
 app.listen(port, () =>
-  console.log('Example app listening on port '+port+'!'),
+  console.log('Starting app. <br>'),
 );

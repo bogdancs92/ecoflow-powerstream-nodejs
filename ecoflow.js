@@ -118,7 +118,7 @@ async function setupMQTTConnection(mqttDaten) {
   client.mqttDaten = mqttDaten;
   // Event-Handler für getrennte Verbindung
   client.on('close', () => {
-      console.log("Le client MQTT est déconnecté");
+      //console.log("Le client MQTT est déconnecté");
       //isMqttConnected = false;
   });
 
@@ -139,7 +139,7 @@ async function setupMQTTConnection(mqttDaten) {
 }
 
 function setAC(client,asn, Value) {
-  log("set Ac => " + Value + " Watts");
+  log("set Ac => " + Value + " Watts<br>");
   let updatedMusterSetAC = musterSetAC;
   if (Value <= -1) {
       delete updatedMusterSetAC.item.meta;
@@ -161,7 +161,7 @@ function setAC(client,asn, Value) {
 function setPrio(_client, _asn, _value) {
     const lastPart =  "SetPrio";
     const matchedEntry = writeables.find((entry) => entry.name === lastPart); 
-    log("setPrio => "+_value);
+    log("setPrio => "+_value+'<br>');
     if (matchedEntry) {
        if (matchedEntry.Typ == "PS") {
             updatedMuster = JSON.parse(JSON.stringify(musterSetAC));
@@ -199,7 +199,7 @@ function SendProto(client, protomsg, topic) {
       if (error) {
           console.error('Fehler beim Veröffentlichen der MQTT-Nachricht:', error);
       } else {
-          log('Le message MQTT a été publié avec succès.'); 
+          //log('Le message MQTT a été publié avec succès.'); 
       }
   });
 }
