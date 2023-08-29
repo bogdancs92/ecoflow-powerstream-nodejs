@@ -38,7 +38,7 @@ app.get('/'+url, (req, res) => {
               .then (client => {
                 client.on('connect', function () {
                   //console.log('Connecté au courtier Ecoflow MQTT');
-                  if (v && v*1>0) {
+                  if (v && v*1>=0) {
                     setAC(client, process.env.KEY_POWERSTREAM_SN,v*10);
                   }
                   else {
