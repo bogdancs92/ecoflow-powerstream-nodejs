@@ -7,26 +7,13 @@ const port = 8000;
 const key = "/?"+process.env.KEY_QUERY+"="
 const app = express();
 const url = process.env.KEY_URL;
+const {log} = require("./utils");
 let mqttDaten = {};
-
-console.log = (function() {
-  var console_log = console.log;
-  return function() {
-    var delta = new Date().toLocaleString('fr-FR');
-    var args = [];
-    args.push(delta + ': ');
-    for(var i = 0; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    }
-    console_log.apply(console, args);
-  };
-})();
 
 app.get('/'+url, (req, res) => {
   if (process.env.TOKEN && req.query[process.env.TOKEN] && (req.query[process.env.TOKEN] = process.env.TOKEN_VAL)) {
     let v = req.query[process.env.KEY_QUERY_AC];
     let v2 = req.query[process.env.KEY_QUERY_PRIO];
-    //console.log(v,v2);
     if (process.env.KEY_PASSWORD && process.env.KEY_MAIL && process.env.KEY_POWERSTREAM_SN && ( v || v2)) {
       //changeWatt(v*1, process.env.KEY_PASSWORD, process.env.KEY_MAIL, process.env.KEY_POWERSTREAM_SN);
       if (req.query[process.env.KEY_QUERY_AC] || req.query[process.env.KEY_QUERY_PRIO]) {
@@ -34,22 +21,26 @@ app.get('/'+url, (req, res) => {
         mqttDaten = getEcoFlowMqttData(process.env.KEY_MAIL, process.env.KEY_PASSWORD)
         .then(mqttDaten => {
           if (mqttDaten) {
+            log('recevied datas from Ecoflow MQTT broker', mqttDaten)
             setupMQTTConnection(mqttDaten)
               .then (client => {
                 client.on('connect', function () {
+                  log('connected to Ecoflow MQTT broker')
                   //console.log('Connecté au courtier Ecoflow MQTT');
                   if (v && v*1>=0) {
                     setAC(client, process.env.KEY_POWERSTREAM_SN,v*10);
                   }
                   else {
-                    console.log(v);
+                    log(process.env.KEY_QUERY_AC + ' must be grater than 0')
                   }
                   if (v2 && (v2*1===0 || v2*1===1)) {
                     setPrio(client, process.env.KEY_POWERSTREAM_SN,v2);
                   }
-                  //
-                  //
+                  else {
+                    log(process.env.KEY_POWERSTREAM_SN + ' must be 0 or 1')
+                  }
                   setTimeout(() => {
+                    log('disconnect to Ecoflow MQTT broker')                    
                     client.end();
                   }, "3000");
                   //isMqttConnected = true
@@ -57,25 +48,35 @@ app.get('/'+url, (req, res) => {
             })
             .catch();
           }
-          res.send('Hello World!');
+          else  {
+            log('not connected to Ecoflow MQTT broker')
+            res.send('not connected to Ecoflow MQTT broker');
+          }
+
         })
         .catch();
-        }
+      }
       else {
-        res.send('Hello World!')
+        log(process.env.KEY_QUERY_AC + ' or '  + process.env.KEY_QUERY_AC + ' are mandatory')
+        res.send(process.env.KEY_QUERY_AC + ' or '  + process.env.KEY_QUERY_AC + ' are mandatory')
       }
     }
     else {
-      res.send('Hello World!')
+      log(process.env.KEY_PASSWORD + ' are mandatory')
+      res.send(process.env.KEY_PASSWORD + ' are mandatory')
     }
   }
   else {
-    res.send('Hello World!')
+    log(process.env.TOKEN + ' are mandatory')
+    res.send(process.env.TOKEN + ' are mandatory')
   }
 });
 
-app.use((req, res) => {res.status(404).send('Hello World!')});
+app.use((req, res) => {res.status(404).send('Not found!')});
 
-app.listen(port, () =>
-  console.log('Starting app.'),
-);
+var server = app.listen(port, () => {
+   var host = server.address().address;
+   var port = server.address().port;
+   
+   log("Starting app listening at port " + port)
+});
