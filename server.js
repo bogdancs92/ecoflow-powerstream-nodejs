@@ -27,6 +27,10 @@ app.get('/'+url, (req, res) => {
                 client.on('connect', function () {
                   log('connected to Ecoflow MQTT broker')
                   //console.log('Connecté au courtier Ecoflow MQTT');
+                  client.subscribe(['#'], () => {
+                      log('Subscribe to Ecoflow MQTT topic #')
+                  })
+  
                   if (v && v*1>=0) {
                     setAC(client, process.env.KEY_POWERSTREAM_SN,v*10);
                   }

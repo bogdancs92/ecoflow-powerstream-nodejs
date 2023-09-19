@@ -134,7 +134,11 @@ async function setupMQTTConnection(mqttDaten) {
       // don't need to reconnect
       client.end();
   });
-  
+
+  client.on('message', (topic, payload) => {
+      log('Received Message to Ecoflow MQTT broker', topic, payload.toString()); 
+  });
+
   // Weitere Event-Handler hier...
   return client;
 }
