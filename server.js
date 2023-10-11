@@ -26,6 +26,7 @@ app.get('/'+url, (req, res) => {
   if (process.env.TOKEN && req.query[process.env.TOKEN] && (req.query[process.env.TOKEN] = process.env.TOKEN_VAL)) {
     let v = req.query[process.env.KEY_QUERY_AC];
     let v2 = req.query[process.env.KEY_QUERY_PRIO];
+    let v3 = req.query[process.env.TARGET];
     //console.log(v,v2);
     if (process.env.KEY_PASSWORD && process.env.KEY_MAIL && process.env.KEY_POWERSTREAM_SN && ( v || v2)) {
       //changeWatt(v*1, process.env.KEY_PASSWORD, process.env.KEY_MAIL, process.env.KEY_POWERSTREAM_SN);
@@ -39,13 +40,23 @@ app.get('/'+url, (req, res) => {
                 client.on('connect', function () {
                   //console.log('Connecté au courtier Ecoflow MQTT');
                   if (v && v*1>=0) {
-                    setAC(client, process.env.KEY_POWERSTREAM_SN,v*10);
+                    if (v3==2) {
+                      setAC(client, process.env.KEY_POWERSTREAM_SN2,v*10);
+                    }
+                    else {
+                      setAC(client, process.env.KEY_POWERSTREAM_SN,v*10);
+                    }
                   }
                   else {
                     console.log(v);
                   }
                   if (v2 && (v2*1===0 || v2*1===1)) {
-                    setPrio(client, process.env.KEY_POWERSTREAM_SN,v2);
+                    if (v3==2) {
+                      setPrio(client, process.env.KEY_POWERSTREAM_SN2,v2);
+                    }
+                    else {
+                      setPrio(client, process.env.KEY_POWERSTREAM_SN,v2);
+                    }
                   }
                   //
                   //
