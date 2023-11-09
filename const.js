@@ -385,10 +385,38 @@ const musterSetAC = {
   }
 };
 
+const musterDELTA2MAX = {
+  "params":
+  {
+  },
+  "from": "iOS",
+  "lang": "en-en",
+  "id": "873106536",
+  "moduleSn": "XXXXXXXXXXXXXXXX",
+  "moduleType": 1,
+  "operateType": "quietCfg",
+  "version": "1.0"
+}
+
 const writeables = [
+  //PowerStream
+  { id: 1, name: 'InverterHeartbeat', Typ: 'PS', Templet: 'InverterHeartbeat', writeable: false, cmdFunc: 20 },
+  { id: 4, name: 'InverterHeartbeat2', Typ: 'PS', Templet: 'InverterHeartbeat2', writeable: false, cmdFunc: 20 },
+  { id: 11, name: 'Ping', Typ: 'PS', Templet: 'setValue', writeable: false, cmdFunc: 32 },
+  { id: 32, name: 'PowerPack_32', Typ: 'PS', Templet: 'PowerPack32', writeable: false, Ignor: true, cmdFunc: 254 },
+  { id: 134, name: 'Ignor', Typ: 'PS', Templet: '', writeable: false, Ignor: true, cmdFunc: 20 },
+  { id: 135, name: 'SetDisplayBrightness', Typ: 'PS', Templet: 'setValue', writeable: true, ValueName: 'value', Ignor: false, cmdFunc: 20 },
+  { id: 136, name: 'PowerPack_136', Typ: 'PS', Templet: 'PowerPack136', writeable: false, cmdFunc: 20 },
+  { id: 138, name: 'PowerPack_138', Typ: 'PS', Templet: 'PowerPack138', writeable: false, cmdFunc: 20 },
+  { id: 130, name: 'SetPrio', Typ: 'PS', Templet: 'setValue', writeable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 132, name: 'SetBatLimitLow', Typ: 'PS', Templet: 'setValue', writeable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 133, name: 'SetBatLimitHigh', Typ: 'PS', Templet: 'setValue', writeable: true, ValueName: 'value', cmdFunc: 20 },
+  { id: 129, name: 'SetAC', Typ: 'PS', Templet: 'setValue', writeable: true, ValueName: 'value', cmdFunc: 20 },
+  //Delta Max
   { id: 38, name: 'Beep', ValueName: 'enabled', Typ: 'DM' },
   { id: 69, name: 'slowChgPower', ValueName: 'slowChgPower', Typ: 'DM' },
   { id: 66, name: 'ACPower', ValueName: 'enabled', Typ: 'DM' },
+  { id: 66, name: 'xboost', ValueName: 'xboost', Typ: 'DM' },
   { id: 81, name: 'DCPower', ValueName: 'enabled', Typ: 'DM' },
   { id: 34, name: 'USBPower', ValueName: 'enabled', Typ: 'DM' },
   { id: 51, name: 'minDsgSoc', ValueName: 'minDsgSoc', Typ: 'DM' },
@@ -399,29 +427,50 @@ const writeables = [
   { id: 153, name: 'ACstandByMins', ValueName: 'standByMins', Typ: 'DM' },
   { id: 52, name: 'openOilSoc', ValueName: 'openOilSoc', Typ: 'DM' },
   { id: 53, name: 'closeOilSoc', ValueName: 'closeOilSoc', Typ: 'DM' },
+  //Delta 2
   { id: 0, name: 'acChgCfg_D2', ValueName: 'chgWatts', Typ: 'D2', MT: 5, AddParam: '{"chgWatts":600,"chgPauseFlag":255}' },
+  { id: 0, name: 'acOutCfg_D2', ValueName: 'enabled', Typ: 'D2', MT: 3 },
   { id: 0, name: 'dcOutCfg_D2', ValueName: 'enabled', Typ: 'D2', MT: 1 },
   { id: 0, name: 'quietMode_D2', ValueName: 'enabled', Typ: 'D2', MT: 5 },
   { id: 0, name: 'dcChgCfg_D2', ValueName: 'dcChgCfg', Typ: 'D2', MT: 5 },
-  { id: 1, name: 'InverterHeartbeat', Typ: 'PS', Templet: 'InverterHeartbeat', Writable: false, cmdFunc: 20 },
-  { id: 1, name: 'plug_heartbeat_pack', Typ: 'PLUG', Templet: 'plug_heartbeat_pack', Writable: false, cmdFunc: 2 },
-  { id: 4, name: 'InverterHeartbeat2', Typ: 'PS', Templet: 'InverterHeartbeat2', Writable: false, cmdFunc: 20 },
-  { id: 11, name: 'Ping', Typ: 'PS', Templet: 'setValue', Writable: false, cmdFunc: 32 },
-  { id: 32, name: 'Ignor', Typ: 'PS', Templet: '', Writable: false, Ignor: true, cmdFunc: 254 },
-  { id: 134, name: 'Ignor', Typ: 'PS', Templet: '', Writable: false, Ignor: true, cmdFunc: 20 },
-  { id: 135, name: 'SetDisplayBrightness', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', Ignor: false, cmdFunc: 20 },
-  { id: 135, name: 'Ignor', Typ: 'Plug', Templet: '', Writable: false, ValueName: '', Ignor: true, cmdFunc: 2 },
-  { id: 136, name: 'PowerPack', Typ: 'PS', Templet: 'PowerPack', Writable: false, cmdFunc: 20 },
-  { id: 138, name: 'PowerPack', Typ: 'PS', Templet: 'PowerPack', Writable: false, cmdFunc: 20 },
-  { id: 130, name: 'SetPrio', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
-  { id: 132, name: 'SetBatLimitLow', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
-  { id: 133, name: 'SetBatLimitHigh', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
-  { id: 129, name: 'SetAC', Typ: 'PS', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 20 },
-  { id: 129, name: 'SwitchPlug', Typ: 'Plug', Templet: 'setValue', Writable: true, ValueName: 'value', cmdFunc: 2 },
+  //Delta 2 Max
+  { id: 0, name: 'quietCfg', ValueName: 'enabled', Typ: 'D2M', MT: 1, OT: 'quietCfg' }, // 0 = Piepen ein, 1 = Piepen aus
+  { id: 0, name: 'xboost', ValueName: 'xboost', Typ: 'D2M', MT: 3, OT: 'acOutCfg', AddParam: '{"enabled":255,"out_freq":255,"out_voltage":4294967295,"xboost":0}' }, // 0 ist aus und 1 ist ein (default = 255)
+  { id: 0, name: 'ACenabled', ValueName: 'enabled', Typ: 'D2M', MT: 3, OT: 'acOutCfg', AddParam: '{"enabled":0,"out_freq":255,"out_voltage":4294967295,"xboost":255}' }, // 0 ist aus und 1 ist ein (default = 255)
+  // xboost und ACenabled funktionieren zwar, aber beim Setzen in der App des einen Parameters wird der andere Parameter in iobroker auf 255 gesetzt, was aber keine Auswirkungen hat
+  //
+  { id: 0, name: 'maxChgSoc', ValueName: 'maxChgSoc', Typ: 'D2M', MT: 2, OT: 'upsConfig' }, // Ladegrenzwert -> dasselbe wie SetBatLimitHigh im PS
+  { id: 0, name: 'minDsgSoc', ValueName: 'minDsgSoc', Typ: 'D2M', MT: 2, OT: 'dsgCfg' }, // Entladegrenzwert -> dasselbe wie SetBatLimitLow im PS
+  //
+  { id: 0, name: 'bpPowerSoc', ValueName: 'bpPowerSoc', Typ: 'D2M', MT: 1, OT: 'watthConfig', AddParam: '{"bpPowerSoc":12,"minChgSoc":0,"isConfig":0,"minDsgSoc":0}' }, // Backup-Reserve Sicherung in %
+  { id: 0, name: 'bpPowerEnable', ValueName: 'isConfig', Typ: 'D2M', MT: 1, OT: 'watthConfig', AddParam: '{"bpPowerSoc":12,"minChgSoc":0,"isConfig":0,"minDsgSoc":0}' }, // Enable Backup-Reserve
+  //
+  { id: 0, name: 'slowChgWatts', ValueName: 'slowChgWatts', Typ: 'D2M', MT: 3, OT: 'acChgCfg', AddParam: '{"fastChgWatts":200, "slowChgWatts":255,"chgPauseFlag":0}' }, // Objekt angelegt, schreibbar
+  { id: 0, name: 'chgPauseFlag', ValueName: 'chgPauseFlag', Typ: 'D2M', MT: 3, OT: 'acChgCfg', AddParam: '{"fastChgWatts":200, "slowChgWatts":255,"chgPauseFlag":0}' }, // TODO: chgPauseFlag testen, ob dann die Ladung pausiert
+  //
+  { id: 0, name: 'dcChgCfg', ValueName: 'dcChgCfg', Typ: 'D2M', MT: 5, OT: 'dcChgCfg', AddParam: '{"dcChgCfg":0, "dcChgCfg2":0}' }, // Objekt angelegt, schreibbar, aber beide Eingänge werden gleichzeitig mit dem selben Wert geändert
+  { id: 0, name: 'dcChgCfg2', ValueName: 'dcChgCfg2', Typ: 'D2M', MT: 5, OT: 'dcChgCfg', AddParam: '{"dcChgCfg":0, "dcChgCfg2":0}' }, // Hier genauso und die Werte sind 8000 (8A), 6000 (6A) und 4000 (4A)
+  //
+  { id: 0, name: 'USB', ValueName: 'enabled', Typ: 'D2M', MT: 1, OT: 'dcOutCfg' }, // USB ein/aus
+  { id: 0, name: '12VDC', ValueName: 'enabled', Typ: 'D2M', MT: 5, OT: 'mpptCar' }, // 12V Auto ein/aus
+  { id: 0, name: 'smartgenClose', ValueName: 'closeOilSoc', Typ: 'D2M', MT: 2, OT: 'closeOilSoc' }, // Automatisches Einschalten des Smart Generators in %
+  { id: 0, name: 'smartgenOpen', ValueName: 'openOilSoc', Typ: 'D2M', MT: 2, OT: 'openOilSoc' }, // Automatisches Ausschalten des Smart Generators in %
+  { id: 0, name: 'standbyTime', ValueName: 'standbyMin', Typ: 'D2M', MT: 1, OT: 'standbyTime' }, // Geräte-Zeitüberschreitung (in min) 0 => Nie
+  { id: 0, name: 'lcdTime', ValueName: 'delayOff', Typ: 'D2M', MT: 1, OT: 'lcdCfg', AddParam: '{"brighLevel":255}' }, // Bildschirm-Zeitüberschreitung (in Sekunden) 0 => Nie
+  { id: 0, name: 'setRtcTime', Ignor: true, ValueName: 'sec', Typ: 'D2M', MT: 2, OT: 'setRtcTime', AddParam: '{"sec":4,"min": 13, "week": 3, "month": 9,"hour": 11,"year": 2023, "day":6}' }, // Ignorieren
+  // Smart Plugs
+  { id: 2, name: 'PowerPack_2', Typ: 'SM', Templet: 'PowerPack2', writeable: false, ValueName: '', Ignor: false, cmdFunc: 2 },
+  { id: 11, name: 'Ping', Typ: 'SM', Templet: 'setValue', writeable: false, cmdFunc: 32 },
+  { id: 32, name: 'PowerPack_32', Typ: 'SM', Templet: 'PowerPack32', writeable: false, ValueName: '', Ignor: false, cmdFunc: 254 },
+  { id: 133, name: 'PowerPack_133', Typ: 'SM', Templet: 'PowerPack133', writeable: false, ValueName: '', Ignor: true, cmdFunc: 2 },
+  { id: 135, name: 'PowerPack_135', Typ: 'SM', Templet: 'PowerPack135', writeable: false, ValueName: '', Ignor: true, cmdFunc: 2 },
+  { id: 1, name: 'plug_heartbeat_pack', Typ: 'SM', Templet: 'plug_heartbeat_pack', writeable: false, cmdFunc: 2 },
+  { id: 129, name: 'SwitchPlug', Typ: 'SM', Templet: 'setValue', writeable: true, ValueName: 'value', cmdFunc: 2 },
 ];
 
 module.exports = {
   protoSource2,
   musterSetAC,
-  writeables
+  writeables,
+  musterDELTA2MAX
 }

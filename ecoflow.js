@@ -190,6 +190,44 @@ function setPrio(_client, _asn, _value) {
     }
 }
 
+function DM2() {
+    const lastPart =  "SetPrio";
+    const matchedEntry = writeables.find((entry) => entry.name === lastPart); 
+    if (matchedEntry.Typ == "D2M") {
+        updatedMuster = JSON.parse(JSON.stringify(musterDELTA2MAX));;
+        updatedMuster.id = Date.now().toString()
+        updatedMuster.moduleSn = asn
+        updatedMuster.moduleType = Number(matchedEntry.MT)
+        updatedMuster.operateType = matchedEntry.OT
+
+        if (matchedEntry.AddParam) {
+            updatedMuster.params = JSON.parse(matchedEntry.AddParam);
+            let suchwriteables = writeables.filter((item) => item.OT === matchedEntry.OT && item.Typ == matchedEntry.Typ && updatedMuster.params.hasOwnProperty(item.ValueName) && item.name != matchedEntry.name);
+            if (suchwriteables.length > 0) {
+                suchwriteables.forEach((suchwriteable) => {
+                    const addval = getStateCr(obj.id.replace(lastPart, suchwriteable.name), updatedMuster.params[suchwriteable.ValueName]).val
+                    //log("Adparam: " + suchwriteable.name + " Wert aus State:" + addval + " initvalue:" + updatedMuster.params[suchwriteable.ValueName])
+                    updatedMuster.params[suchwriteable.ValueName] = addval
+                })
+            }
+        }
+        //updatedMuster.params.chgPauseFlag = 255
+        updatedMuster.params[matchedEntry.ValueName] = Number(obj.state.val)
+        SendJSON(JSON.stringify(updatedMuster), '/app/' + mqttDaten.UserID + '/' + asn + '/thing/property/set');
+    }
+}
+
+function SendJSON(protomsg, topic) {
+    //log("topic:" +  topic);
+    client.publish(topic, protomsg, { qos: 1 }, function (error) {
+        if (error) {
+            console.error('Error while publishing MQTT:', error);
+        } else {
+            if (ConfigData.Debug) log('Die MQTT-Nachricht wurde erfolgreich veröffentlicht.'); //
+        }
+    });
+}
+
 function SendProto(client, protomsg, topic) {
   //return
   const root = protobuf.parse(protoSource2).root;
