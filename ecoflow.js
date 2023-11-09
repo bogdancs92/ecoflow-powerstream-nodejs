@@ -17,7 +17,7 @@ function httpsRequest(options, data) {
       });
 
       req.on('error', error => {
-          console.log("error https ",error);
+          log("ERROR https request",error);
           reject(error);
       });
 
@@ -74,7 +74,7 @@ async function getEcoFlowMqttData(email, password) {
       userid = responseData.data.user.userId;
   } catch (error) {
       //throw new Error("Une erreur s'est produite:",error);
-      console.log("ERROR",response);
+      log("ERROR to connect Ecoflow MQTT broker", response);
       return null;
   }
 
@@ -93,7 +93,7 @@ async function getEcoFlowMqttData(email, password) {
       mqttDaten.protocol = response.data.protocol;
       mqttDaten.clientID = "ANDROID_" + uuidv4() + "_" + userid
   } catch (error) {
-      log("ERROR : Une erreur s'est produite lors de la détermination des données d'accès. Veuillez vérifier les données d'accès.", mqttDaten);
+      log("ERROR An error has occurred while determining the access data. Please check the access data", mqttDaten);
       return null;
       //throw new Error("Une erreur s'est produite lors de la détermination des données d'accès. Veuillez vérifier les données d'accès.");
   }
@@ -118,22 +118,27 @@ async function setupMQTTConnection(mqttDaten) {
   client.mqttDaten = mqttDaten;
   // Event-Handler für getrennte Verbindung
   client.on('close', () => {
+      log("Ecoflow MQTT broker is deconnected");
       //console.log("Le client MQTT est déconnecté");
       //isMqttConnected = false;
   });
 
   // Callback für Fehler
   client.on('error', function (error) {
-      log('Fehler bei der Ecoflow MQTT-Verbindung:' + error, 'warn'); //
+      log('Error with the Ecoflow MQTT broker connection ' + error);
   });
 
   
   client.on('reconnect', function () {
-      console.log('Reconnecting to Ecoflow MQTT broker...',mqttDaten.URL, mqttDaten.Port, mqttDaten.protocol); //
+      log('Reconnecting to Ecoflow MQTT broker...',mqttDaten.URL, mqttDaten.Port, mqttDaten.protocol); 
       // don't need to reconnect
       client.end();
   });
-  
+
+  client.on('message', (topic, payload) => {
+      log('Received Message to Ecoflow MQTT broker', topic, payload.toString()); 
+  });
+
   // Weitere Event-Handler hier...
   return client;
 }
@@ -153,6 +158,7 @@ function setAC(client,asn, Value) {
   updatedMusterSetAC.header.deviceSn = asn
   //log(JSON.stringify(updatedMusterSetAC))
   //setState(ConfigData.statesPrefix + '.app_' + mqttDaten.UserID + '_' + asn + '_thing_property_set.setAC', Value.toString(), true)
+  log('send SetAc to Ecoflow MQTT broker for ' + asn); 
   SendProto(client,JSON.stringify(updatedMusterSetAC), '/app/' + client.mqttDaten.UserID + '/' + asn + '/thing/property/set');
 }
 
@@ -178,6 +184,7 @@ function setPrio(_client, _asn, _value) {
             updatedMuster.header.seq = Date.now()
             updatedMuster.header.deviceSn = _asn
             //log(JSON.stringify(updatedMuster))
+            log('send SetPrio to Ecoflow MQTT broker for ' + _asn); 
             SendProto(_client, JSON.stringify(updatedMuster), '/app/' + _client.mqttDaten.UserID + '/' + _asn + '/thing/property/set');
         } 
     }
@@ -235,9 +242,9 @@ function SendProto(client, protomsg, topic) {
   //log("topic:" +  topic);
   client.publish(topic, messageBuffer, { qos: 1 }, function (error) {
       if (error) {
-          console.error('Fehler beim Veröffentlichen der MQTT-Nachricht:', error);
+          log('Error when publishing the Ecoflow MQTT message:', error);
       } else {
-          //log('Le message MQTT a été publié avec succès.'); 
+          log('The MQTT message has been successfully published');
       }
   });
 }
